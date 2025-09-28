@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gemini_app/presentation/providers/chat/basic_chat.dart';
 import 'package:gemini_app/presentation/providers/chat/is_gemini_writing.dart';
 import 'package:gemini_app/presentation/providers/users/user_provider.dart';
-import 'package:uuid/uuid.dart';
 
 
 class BasicPromptScreen extends ConsumerWidget {
