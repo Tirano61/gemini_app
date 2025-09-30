@@ -31,4 +31,30 @@ class GeminiImpl {
       return 'Error en la peticion a Gemini';
     }
   }
+
+  Stream<String> getResponseStream(String prompt) async* {
+   try{
+      // TODO: Tener presente que vamos a enviar imagenes tambien
+      //! Multipart 
+      final body = {'prompt': prompt};
+      final response = await _http.post('/basic-prompt-stream', 
+        data: jsonEncode(body), 
+        options: Options(
+          responseType: ResponseType.stream,
+        )
+      );
+
+      final stream = response.data.stream as Stream<List<int>>;
+      String buffer = '';
+
+      await for (final chunk in stream) {
+        final chunkString = utf8.decode(chunk, allowMalformed: true);
+        buffer += chunkString;
+        yield buffer;
+      }
+
+    }catch(e){
+      yield 'Error en la peticion a Gemini';
+    }
+  }
 }
