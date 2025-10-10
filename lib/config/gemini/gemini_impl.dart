@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 
 class GeminiImpl {
   
@@ -32,13 +33,27 @@ class GeminiImpl {
     }
   }
 
-  Stream<String> getResponseStream(String prompt) async* {
+  Stream<String> getResponseStream(String prompt,{List<XFile> files = const []}) async* {
    try{
-      // TODO: Tener presente que vamos a enviar imagenes tambien
+      
       //! Multipart 
-      final body = {'prompt': prompt};
+      final formData = FormData();
+      formData.fields.add(MapEntry('prompt', prompt));
+
+      if(files.isNotEmpty){
+        for(XFile file in files) {
+          formData.files.add(
+            MapEntry(
+              'files', 
+              await MultipartFile.fromFile(file.path, filename: file.name)
+            )
+          );
+        }
+      }
+
+      //final body = {'prompt': prompt};
       final response = await _http.post('/basic-prompt-stream', 
-        data: jsonEncode(body), 
+        data: formData, 
         options: Options(
           responseType: ResponseType.stream,
         )
