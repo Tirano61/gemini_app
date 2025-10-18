@@ -20,6 +20,15 @@ class ChatContextScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat Conversacional'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.clear_outlined),
+            onPressed: () {
+              final chatNotifier = ref.read(chatWithContextProvider.notifier);
+              chatNotifier.newChat();
+            },
+          ),
+        ],
       ),
       body: Chat(
         messages: chatMessages,
